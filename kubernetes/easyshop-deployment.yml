@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: easyshop
+  namespace: easyshop-ns
+spec:
+  selector:
+    matchLabels:
+      app: easyshop
+  replicas: 2
+  template:
+    metadata:
+      name: easyshop
+      namespace: easyshop-ns
+      labels:
+        app: easyshop
+    spec:
+      containers:
+        - name: easyshop
+          image: snehalpawar2945/easyshop:latest
+          imagePullPolicy: Always
+          ports: 
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: easyshop-configmap
+            # - secretMapRef:
+            #     name: easyshop-secrets
+          env:
+            - name: NEXTAUTH_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: easyshop-configmap
+                  key: NEXTAUTH_URL
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: easyshop-configmap
+                  key: NEXTAUTH_SECRET
+            - name: JWT_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: easyshop-configmap
+                  key: JWT_SECRET
+          
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          
+          startupProbe:
+            httpGet:
+              path: /
+              port: 3000
+            failureThreshold: 30
+            periodSeconds: 10
+          
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 10
