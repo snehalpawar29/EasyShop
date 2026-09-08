@@ -20,7 +20,7 @@ module "eks" {
       from_port                = 443
       to_port                  = 443
       type                     = "ingress"
-      source_security_group_id = "sg-0b395f1d0b6e42a33"
+      source_security_group_id = aws_security_group.easyshop_sg.id
     }
   }
   cluster_addons = {
@@ -34,7 +34,7 @@ module "eks" {
   control_plane_subnet_ids = module.vpc.intra_subnets
 
   eks_managed_node_group_defaults = {
-    instance_types                        = ["c7i-flex.large"]
+    instance_types                        = ["t3.small"]
     attach_cluster_primary_security_group = true
   }
 
@@ -43,7 +43,7 @@ module "eks" {
       desired_size               = 2
       min_size                   = 2
       max_size                   = 3
-      instance_types             = ["c7i-flex.large"]
+      instance_types             = ["t3.small"]
       disk_size                  = 20
       capacity_type              = "SPOT"
       use_custom_launch_template = false

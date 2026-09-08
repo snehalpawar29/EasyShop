@@ -1,15 +1,9 @@
 #!/bin/bash
 
-set -euxo pipefail
+touch /var/log/install-tools.log
 
-exec > >(tee /var/log/install-tools.log | logger -t install-tools -s 2>/dev/console) 2>&1
-
-echo "===== Starting tool installation ====="
-
-# Update packages
+echo "===== Starting tool installation =====" >> /var/log/install-tools.log
 sudo apt-get update -y
-
-# Basic packages + Java
 sudo apt-get install -y \
   fontconfig \
   openjdk-21-jre \
@@ -18,86 +12,59 @@ sudo apt-get install -y \
   ca-certificates \
   docker.io
 
-echo "===== Java installed ====="
-java -version
+echo "===== Java installed =====" >>/var/log/install-tools.log
+java -version >>/var/log/install-tools.log 
 
-# =========================================================
-# Jenkins
-# =========================================================
 
-mkdir -p /etc/apt/keyrings
 
-wget -O /etc/apt/keyrings/jenkins-keyring.asc \
+sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
   https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key
-
-echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/" \
-  > /etc/apt/sources.list.d/jenkins.list
-
+echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
 sudo apt-get update -y
-
 sudo apt-get install -y jenkins
 
 sudo systemctl enable jenkins
 sudo systemctl start jenkins
 
-echo "===== Jenkins installed ====="
+echo "===== Jenkins installed =====" >>/var/log/install-tools.log
+jenkins --version >>/var/log/install-tools.log
 
-# =========================================================
-# Docker
-# =========================================================
 
 sudo systemctl enable docker
 sudo systemctl start docker
 
 sudo usermod -aG docker ubuntu
 sudo usermod -aG docker jenkins
-
 sudo systemctl restart docker
 
-echo "===== Docker installed ====="
+echo "===== Docker installed =====" >>/var/log/install-tools.log
+docker --version >>/var/log/install-tools.log 
 
-# =========================================================
-# Trivy
-# =========================================================
 
-wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key \
-  | gpg --dearmor \
-  > /usr/share/keyrings/trivy.gpg
-
-echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" \
-  > /etc/apt/sources.list.d/trivy.list
-
+apt-get install wget gnupg
+wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
 sudo apt-get update -y
-
 sudo apt-get install -y trivy
 
-echo "===== Trivy installed ====="
+echo "===== Trivy installed =====" >>/var/log/install-tools.log
+trivy --version >>/var/log/install-tools.log
 
-# =========================================================
-# AWS CLI
-# =========================================================
 
-sudo apt-get install -y awscli
-
-echo "===== AWS CLI installed ====="
-
-# =========================================================
-# Helm
-# =========================================================
+sudo snap install aws-cli --classic
+echo "===== AWS CLI installed =====" >>/var/log/install-tools.log
+aws --version >>/var/log/install-tools.log
 
 sudo snap install helm --classic
-
-echo "===== Helm installed ====="
-
-# =========================================================
-# kubectl
-# =========================================================
+echo "===== Helm installed =====" >>/var/log/install-tools.log
+helm version >>/var/log/install-tools.log
 
 sudo snap install kubectl --classic
+echo "===== kubectl installed =====" >>/var/log/install-tools.log
+kubectl version --client >>/var/log/install-tools.log
 
-echo "===== kubectl installed ====="
-
-# Restart Jenkins after Docker installation
 sudo systemctl restart jenkins
 
-echo "===== ALL TOOLS INSTALLED SUCCESSFULLY ====="
+echo "===== ALL TOOLS INSTALLED SUCCESSFULLY =====" >>/var/log/install-tools.log
