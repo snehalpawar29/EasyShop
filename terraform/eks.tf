@@ -47,8 +47,8 @@ module "eks" {
       instance_types             = ["t3.small"]
       disk_size                  = 20
       capacity_type              = "SPOT"
-      use_custom_launch_template = false
-      aws_security_group.easyshop_sg.id
+      use_custom_launch_template = true
+      aws_security_group_id = aws_security_group.easyshop_sg.id
       use_custom_launch_template = true
       additional_tags = {
         Name = "easyshop-ng"
