@@ -49,6 +49,7 @@ module "eks" {
       capacity_type              = "SPOT"
       use_custom_launch_template = false
       aws_security_group.easyshop_sg.id
+      use_custom_launch_template = true
       additional_tags = {
         Name = "easyshop-ng"
       }
