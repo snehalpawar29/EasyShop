@@ -2,7 +2,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.0"
 
-  name            = local.name
+  name            = "easyshop-vpc"
   cidr            = local.cidr_block
   azs             = local.azs
   public_subnets  = local.public_subnets

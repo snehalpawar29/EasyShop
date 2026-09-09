@@ -1,6 +1,6 @@
 data "aws_instances" "eks_managed_node_groups" {
   filter {
-    name   = "tag:kubernetes.io/cluster/${local.name}" # Change 'aws_eks_cluster.eks.name' to match your actual cluster resource name
+    name   = "tag:kubernetes.io/cluster/${local.name}" 
     values = ["owned"]
   }
 
@@ -40,6 +40,7 @@ module "eks" {
 
   eks_managed_node_groups = {
     easyshop-ng = {
+      name = "easyshop-ng"
       desired_size               = 2
       min_size                   = 2
       max_size                   = 3
