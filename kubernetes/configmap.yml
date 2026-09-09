@@ -4,7 +4,7 @@ metadata:
   name: easyshop-configmap
   namespace: easyshop-ns
 data:
-  MONGODB_URI : mongodb://mongodb-service:27017/easyshop
+  MONGODB_URI : mongodb://mongodb-svc:27017/easyshop
   NEXTAUTH_URL: http://13.206.108.111:3000  
   NEXT_PUBLIC_API_URL: http://13.206.108.111:3000/api  
   NEXTAUTH_SECRET: HmaFjYZ2jbUK7Ef+wZrBiJei4ZNGBAJ5IdiOGAyQegw=  
