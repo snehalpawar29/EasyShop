@@ -4,7 +4,7 @@ metadata:
   name: mongodb
   namespace: easyshop-ns
 spec:
-  serviceName: mongodb-service
+  serviceName: mongodb-svc
   replicas: 1
   selector:
     matchLabels:

@@ -12,6 +12,6 @@ spec:
           imagePullPolicy: Always
           env:
             - name: MONGODB_URI
-              value: "mongodb://mongodb-service:27017/easyshop"
+              value: "mongodb://mongodb-svc:27017/easyshop"
       
       restartPolicy: OnFailure
