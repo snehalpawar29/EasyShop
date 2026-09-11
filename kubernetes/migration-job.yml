@@ -2,9 +2,16 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: db-migration
-  namespace: easyshop-ns
+  namespace  annotations:
+  argocd.argoproj.io/hook: Sync
+  argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+  argocd.argoproj.io/sync-wave: "1"
 spec:
+  backoffLimit: 4
   template:
+    metadata:
+      labels:
+        app: db-migration   
     spec:
       containers: 
         - name: migration
