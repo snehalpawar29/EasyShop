@@ -34,15 +34,14 @@ spec:
                   key: NEXTAUTH_URL
             - name: NEXTAUTH_SECRET
               valueFrom:
-                configMapKeyRef:
-                  name: easyshop-configmap
+                secretKeyRef:
+                  name: easyshop-secrets
                   key: NEXTAUTH_SECRET
             - name: JWT_SECRET
               valueFrom:
-                configMapKeyRef:
-                  name: easyshop-configmap
-                  key: JWT_SECRET
-          
+                secretKeyRef:
+                  name: easyshop-secrets
+                  key: JWT_SECRET          
           resources:
             requests:
               memory: "256Mi"
