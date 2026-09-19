@@ -765,4 +765,3 @@ Kubernetes HPA
 **AWS | Terraform | Docker | Kubernetes | Jenkins | Argo CD | DevSecOps**
 
 </p>
-```
